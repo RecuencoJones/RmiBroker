@@ -11,6 +11,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created by david on 24/05/2015.
@@ -72,9 +73,10 @@ public class TimeClient {
     protected static class TimeProxy implements ServiceCaller {
 
         TimeImpl timer = new TimeImpl();
+        Logger log = Logger.getLogger(this.getClass().getName());
 
         public String call(String method, String... args) throws RemoteException {
-            System.out.println("Called method: "+method+" with args: "+Arrays.toString(args));
+            log.info("Called method: " + method + " with args: " + Arrays.toString(args));
             switch (method){
                 case getDate:
                     return timer.getDate();
