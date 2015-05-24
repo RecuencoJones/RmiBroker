@@ -4,21 +4,21 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Created by david on 24/05/2015.
+ * Library stub methods
  */
 public interface LibraryIface extends Remote {
 
     /**
-     *
-     * @param title
-     * @return
+     * Method that adds a new book to the library
+     * @param title new book title
+     * @return whether adding went right or wrong
      * @throws RemoteException
      */
     boolean addBook(String title) throws RemoteException;
 
     /**
-     *
-     * @return
+     * Method that returns the list of books of this library
+     * @return list of books
      * @throws RemoteException
      */
     String[] getBooks() throws RemoteException;

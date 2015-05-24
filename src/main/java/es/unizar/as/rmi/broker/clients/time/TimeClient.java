@@ -14,10 +14,11 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
- * Created by david on 24/05/2015.
+ * TimeClient main class
  */
 public class TimeClient {
 
+    //TODO refactor into properties/dynamic
     public static final String brokerName = "broker";
     public static final String hostIP = "localhost";
     public static final int hostPort = 2022;
@@ -29,6 +30,9 @@ public class TimeClient {
     public static final String getDate = "getdate";
     public static final String getHour = "gethour";
 
+    /**
+     * Client initialization
+     */
     public static void main(String[] args) {
         try {
 
@@ -54,6 +58,9 @@ public class TimeClient {
         }
     }
 
+    /**
+     * ClientProxy initialization
+     */
     private static void proxyInit() throws RemoteException, AlreadyBoundException {
         TimeProxy timeProxy = new TimeProxy();
         ServiceCaller proxyStub = (ServiceCaller) UnicastRemoteObject.exportObject(timeProxy, 0);
@@ -61,6 +68,12 @@ public class TimeClient {
         proxyRegistry.bind(proxyName,proxyStub);
     }
 
+    /**
+     * Aux method to handle register services on broker
+     * @return broker stubs
+     * @throws RemoteException
+     * @throws NotBoundException
+     */
     private static BrokerIface registerMethods() throws RemoteException, NotBoundException {
         Registry brokerRegistry = LocateRegistry.getRegistry(hostIP, hostPort);
         BrokerIface brokerStub = (BrokerIface) brokerRegistry.lookup(brokerName);
@@ -70,11 +83,21 @@ public class TimeClient {
         return brokerStub;
     }
 
+    /**
+     * This client's proxy implementation
+     */
     protected static class TimeProxy implements ServiceCaller {
 
         TimeImpl timer = new TimeImpl();
         Logger log = Logger.getLogger(this.getClass().getName());
 
+        /**
+         * Method that handles service ad-hoc invocation on client
+         * @param method requested method
+         * @param args requested method list of arguments
+         * @return invoked method's response
+         * @throws RemoteException
+         */
         public String call(String method, String... args) throws RemoteException {
             log.info("Called method: " + method + " with args: " + Arrays.toString(args));
             switch (method){

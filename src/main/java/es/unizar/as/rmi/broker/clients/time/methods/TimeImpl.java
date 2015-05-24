@@ -7,13 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by david on 24/05/2015.
+ * Implementation of LibraryIface stubs
  */
 public class TimeImpl implements TimeIface {
 
     /**
-     *
-     * @return
+     * Method that gets current Date in format yyyy-mm-dd
+     * @return current Date in format yyyy-mm-dd
      * @throws RemoteException
      */
     public String getDate() throws RemoteException {
@@ -22,8 +22,8 @@ public class TimeImpl implements TimeIface {
     }
 
     /**
-     *
-     * @return
+     * Method that gets current hour in format hh:mm
+     * @return current hour in format hh:mm
      * @throws RemoteException
      */
     public String getHour() throws RemoteException {

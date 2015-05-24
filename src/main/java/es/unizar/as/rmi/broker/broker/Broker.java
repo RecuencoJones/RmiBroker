@@ -8,18 +8,25 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
- * Created by david on 24/05/2015.
+ * Broker main class
  */
 public class Broker {
 
+    /**
+     * Broker port and name
+     */
     public static final int port = 2022;
+    public static final String brokerName = "broker";
 
+    /**
+     * Broker initialization
+     */
     public static void main(String[] args) {
         try{
             BrokerImpl broker = new BrokerImpl();
             BrokerIface stub = (BrokerIface) UnicastRemoteObject.exportObject(broker,0);
             Registry registry = LocateRegistry.createRegistry(port);
-            registry.bind("broker",stub);
+            registry.bind(brokerName,stub);
             System.out.println("Broker ready");
         } catch (Exception e){
             e.printStackTrace();

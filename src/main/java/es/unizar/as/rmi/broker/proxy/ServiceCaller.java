@@ -4,9 +4,16 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Created by david on 24/05/2015.
+ * Proxy stub methods
  */
 public interface ServiceCaller extends Remote {
 
+    /**
+     * Method that handles service ad-hoc invocation on client
+     * @param method requested method
+     * @param args requested method list of arguments
+     * @return invoked method's response
+     * @throws RemoteException
+     */
     String call(String method, String... args) throws RemoteException;
 }
