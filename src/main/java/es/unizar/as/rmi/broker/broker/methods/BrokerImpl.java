@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -60,4 +62,11 @@ public class BrokerImpl implements BrokerIface {
             return false;
         }
     }
+
+    public String[] getServices() throws RemoteException {
+        List keys = Collections.list(services.keys());
+        return (String[]) keys.toArray(new String[keys.size()]);
+    }
+
+
 }

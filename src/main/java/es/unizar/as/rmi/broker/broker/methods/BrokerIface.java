@@ -14,5 +14,5 @@ public interface BrokerIface extends Remote {
 
     boolean registerService(String serverName, String serviceName, String... args) throws RemoteException;
 
-
+    String[] getServices() throws RemoteException;
 }

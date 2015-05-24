@@ -1,7 +1,7 @@
-package es.unizar.as.rmi.broker.clients.library;
+package es.unizar.as.rmi.broker.clients.time;
 
 import es.unizar.as.rmi.broker.broker.methods.BrokerIface;
-import es.unizar.as.rmi.broker.clients.library.methods.LibraryImpl;
+import es.unizar.as.rmi.broker.clients.time.methods.TimeImpl;
 import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 
 import java.rmi.AlreadyBoundException;
@@ -15,18 +15,18 @@ import java.util.Arrays;
 /**
  * Created by david on 24/05/2015.
  */
-public class LibraryClient {
+public class TimeClient {
 
     public static final String brokerName = "broker";
     public static final String hostIP = "localhost";
     public static final int hostPort = 2022;
 
     public static final String myIP = "localhost";
-    public static final int myPort = 2021;
+    public static final int myPort = 2020;
 
-    public static final String proxyName = "libraryproxy";
-    public static final String addBook = "addbook";
-    public static final String getBooks = "getbooks";
+    public static final String proxyName = "timeproxy";
+    public static final String getDate = "getdate";
+    public static final String getHour = "gethour";
 
     public static void main(String[] args) {
         try {
@@ -38,8 +38,8 @@ public class LibraryClient {
             BrokerIface brokerStub = registerMethods();
 
             //Execution
-            brokerStub.executeService(addBook, "La historia interminable");
-            System.out.println(brokerStub.executeService(getBooks));
+            System.out.println(brokerStub.executeService(getDate));
+            System.out.println(brokerStub.executeService(getHour));
 
             //TODO eliminar las dos líneas de arriba y hacer una interfaz iterativa
             System.out.println("Available services:");
@@ -54,8 +54,8 @@ public class LibraryClient {
     }
 
     private static void proxyInit() throws RemoteException, AlreadyBoundException {
-        LibraryProxy libraryProxy = new LibraryProxy();
-        ServiceCaller proxyStub = (ServiceCaller) UnicastRemoteObject.exportObject(libraryProxy, 0);
+        TimeProxy timeProxy = new TimeProxy();
+        ServiceCaller proxyStub = (ServiceCaller) UnicastRemoteObject.exportObject(timeProxy, 0);
         Registry proxyRegistry = LocateRegistry.createRegistry(myPort);
         proxyRegistry.bind(proxyName,proxyStub);
     }
@@ -64,22 +64,22 @@ public class LibraryClient {
         Registry brokerRegistry = LocateRegistry.getRegistry(hostIP, hostPort);
         BrokerIface brokerStub = (BrokerIface) brokerRegistry.lookup(brokerName);
         boolean response = brokerStub.registerServer(myIP+":"+myPort,proxyName);
-        if(response) response = brokerStub.registerService(proxyName,addBook,new String[1]);
-        if(response) response = brokerStub.registerService(proxyName,getBooks,new String[0]);
+        if(response) response = brokerStub.registerService(proxyName,getDate,new String[0]);
+        if(response) response = brokerStub.registerService(proxyName,getHour,new String[0]);
         return brokerStub;
     }
 
-    protected static class LibraryProxy implements ServiceCaller {
+    protected static class TimeProxy implements ServiceCaller {
 
-        LibraryImpl library = new LibraryImpl();
+        TimeImpl timer = new TimeImpl();
 
         public String call(String method, String... args) throws RemoteException {
             System.out.println("Called method: "+method+" with args: "+Arrays.toString(args));
             switch (method){
-                case addBook:
-                    return library.addBook(args[0])+"";
-                case getBooks:
-                    return Arrays.toString(library.getBooks());
+                case getDate:
+                    return timer.getDate();
+                case getHour:
+                    return timer.getHour();
                 default:
                     return null;
             }
