@@ -1,6 +1,7 @@
 package es.unizar.as.rmi.broker.broker.methods;
 
 import es.unizar.as.rmi.broker.broker.BrokerService;
+import es.unizar.as.rmi.broker.broker.Host;
 import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 
 import java.rmi.RemoteException;

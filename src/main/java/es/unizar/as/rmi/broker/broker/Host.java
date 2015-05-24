@@ -1,4 +1,4 @@
-package es.unizar.as.rmi.broker.broker.methods;
+package es.unizar.as.rmi.broker.broker;
 
 /**
  * Created by david on 24/05/2015.
