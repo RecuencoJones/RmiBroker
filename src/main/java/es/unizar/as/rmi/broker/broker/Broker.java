@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Broker {
 
-    public static final int port = 2020;
+    public static final int port = 2022;
 
     public static void main(String[] args) {
         try{

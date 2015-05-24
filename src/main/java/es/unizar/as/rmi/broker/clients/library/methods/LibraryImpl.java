@@ -1,4 +1,6 @@
-package es.unizar.as.rmi.broker.library;
+package es.unizar.as.rmi.broker.clients.library.methods;
+
+import es.unizar.as.rmi.broker.clients.library.methods.LibraryIface;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  */
 public class LibraryImpl implements LibraryIface {
 
-    ArrayList<String> list = new ArrayList<String>();
+    ArrayList<String> list = new ArrayList<>();
 
     public boolean addBook(String title) throws RemoteException {
         return list.add(title);

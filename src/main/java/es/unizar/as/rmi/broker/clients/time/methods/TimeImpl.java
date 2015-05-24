@@ -1,6 +1,7 @@
-package es.unizar.as.rmi.broker.time;
+package es.unizar.as.rmi.broker.clients.time.methods;
 
-import javax.swing.text.DateFormatter;
+import es.unizar.as.rmi.broker.clients.time.methods.TimeIface;
+
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -7,6 +7,7 @@ import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -21,12 +22,14 @@ public class BrokerImpl implements BrokerIface {
     public String executeService(String serviceName, String... args) throws RemoteException {
 
         BrokerService service = services.get(serviceName);
-        Host host = serversToHosts.get(servicesToServers.get(serviceName));
+        String server = servicesToServers.get(serviceName);
+        Host host = serversToHosts.get(server);
+        System.out.println("Called service: "+serviceName+" with args: "+ Arrays.toString(args));
 
         try {
             Registry registry = LocateRegistry.getRegistry(host.getIP(), host.getPort());
-            ServiceCaller stub = (ServiceCaller) registry.lookup(service.getServiceName());
-            String response = stub.call(service.getServiceName(),service.getArgs());
+            ServiceCaller serverStub = (ServiceCaller) registry.lookup(server);
+            String response = serverStub.call(serviceName,args);
             return response;
         }catch (Exception e){
             System.err.println("Broker exception");
@@ -38,6 +41,7 @@ public class BrokerImpl implements BrokerIface {
     public boolean registerServer(String remoteHost, String serverName) throws RemoteException {
         try {
             serversToHosts.put(serverName, new Host(remoteHost));
+            System.out.println("Registered host: "+remoteHost+" with server name: "+serverName);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -49,6 +53,7 @@ public class BrokerImpl implements BrokerIface {
         try {
             services.put(serviceName, new BrokerService(serviceName, args));
             servicesToServers.put(serviceName, serverName);
+            System.out.println("Registered service: " + serviceName + " on server name: " + serverName);
             return true;
         }catch (Exception e){
             e.printStackTrace();
