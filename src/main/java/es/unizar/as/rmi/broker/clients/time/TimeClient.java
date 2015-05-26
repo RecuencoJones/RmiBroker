@@ -1,9 +1,13 @@
 package es.unizar.as.rmi.broker.clients.time;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import es.unizar.as.rmi.broker.broker.methods.BrokerIface;
 import es.unizar.as.rmi.broker.clients.time.methods.TimeImpl;
 import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -11,6 +15,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 /**
@@ -18,22 +23,24 @@ import java.util.logging.Logger;
  */
 public class TimeClient {
 
-    //TODO refactor into properties/dynamic
-    public static final String brokerName = "broker";
-    public static final String hostIP = "localhost";
-    public static final int hostPort = 2022;
+    public static String brokerName;
+    public static String hostIP;
+    public static int hostPort;
 
-    public static final String myIP = "localhost";
-    public static final int myPort = 2020;
-
-    public static final String proxyName = "timeproxy";
-    public static final String getDate = "getdate";
-    public static final String getHour = "gethour";
+    public static String proxyName;
+    public static String myIP;
+    public static int myPort;
+    public static final String getDate = "getDate()";
+    public static final String getHour = "getHour()";
 
     /**
      * Client initialization
      */
     public static void main(String[] args) {
+
+        //Config
+        doConfiguration();
+
         try {
 
             //ProxySetup
@@ -43,19 +50,26 @@ public class TimeClient {
             BrokerIface brokerStub = registerMethods();
 
             //Execution
-            System.out.println(brokerStub.executeService(getDate));
-            System.out.println(brokerStub.executeService(getHour));
-
-            //TODO eliminar las dos líneas de arriba y hacer una interfaz iterativa
-            System.out.println("Available services:");
-            String[] services = brokerStub.getServices();
-            for (String s : services){
-                System.out.println(" - "+s);
-            }
+            doInteraction(brokerStub);
 
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Client initialization
+     */
+    private static void doConfiguration(){
+        Config conf = ConfigFactory.load("time");
+
+        brokerName = conf.getString("broker.name");
+        hostIP = conf.getString("broker.host");
+        hostPort = conf.getInt("broker.port");
+
+        proxyName = conf.getString("client.name");
+        myIP = conf.getString("client.host");
+        myPort = conf.getInt("client.port");
     }
 
     /**
@@ -81,6 +95,51 @@ public class TimeClient {
         if(response) response = brokerStub.registerService(proxyName,getDate,new String[0]);
         if(response) response = brokerStub.registerService(proxyName,getHour,new String[0]);
         return brokerStub;
+    }
+
+    /**
+     * Aux method that does interaction with the user
+     * @param brokerStub stub with broker methods
+     * @throws RemoteException
+     */
+    private static void doInteraction(BrokerIface brokerStub) throws RemoteException {
+
+        Scanner input = new Scanner(System.in);
+        boolean finish = true;
+        while(finish){
+            System.out.println("Available services:");
+            String[] services = brokerStub.getServices();
+            int cont = 1;
+            System.out.println(0+") - Update");
+            for (String s : services){
+                System.out.println(cont+") - "+s);
+                cont++;
+            }
+            System.out.println(cont+") - Finish execution");
+            System.out.print("Selection: ");
+            int optionUserI = input.nextInt(); input.nextLine();
+
+            if(optionUserI==0){
+
+            }else if(optionUserI==cont){
+                finish = false;
+            }else{
+                String aux = services[optionUserI-1];
+                String paramList = aux.substring(aux.indexOf("(")+1,aux.indexOf(")"));
+                String[] params = paramList.split(",");
+                String[] inputs = new String[params.length];
+                if(!paramList.equals("")) {
+                    for (int i = 0; i < params.length; i++) {
+                        System.out.print("Required parameter \"" + params[i] + "\": ");
+                        inputs[i] = input.nextLine();
+                    }
+                }
+                System.out.println(brokerStub.executeService(services[optionUserI-1], inputs));
+            }
+        }
+
+        System.out.println("TimeClient finished.");
+        System.exit(0);
     }
 
     /**
