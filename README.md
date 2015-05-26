@@ -23,4 +23,8 @@ Or you can compile with your IDE or with old-fashioned-way (javac).
 
 To execute the broker just run `gradle runBroker`
 
-Run clients as you please.
+Run clients with gradle too:
+
+- `gradle runLibraryClient`
+- `gradle runTimeClient`
+- `gradle runExternalClient`

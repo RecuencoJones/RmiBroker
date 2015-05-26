@@ -6,6 +6,7 @@ import es.unizar.as.rmi.broker.broker.methods.BrokerIface;
 import es.unizar.as.rmi.broker.clients.library.methods.LibraryImpl;
 import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.AlreadyBoundException;
@@ -106,35 +107,38 @@ public class LibraryClient {
 
         Scanner input = new Scanner(System.in);
         boolean finish = true;
-        while(finish){
+        while (finish) {
             System.out.println("Available services:");
             String[] services = brokerStub.getServices();
             int cont = 1;
-            System.out.println(0+") - Update");
-            for (String s : services){
-                System.out.println(cont+") - "+s);
+            System.out.println(0 + ") - Update");
+            for (String s : services) {
+                System.out.println(cont + ") - " + s);
                 cont++;
             }
-            System.out.println(cont+") - Finish execution");
-            System.out.print("Selection: ");
-            int optionUserI = input.nextInt(); input.nextLine();
+            System.out.println(cont + ") - Finish execution");
+//            System.out.print("Selection: ");
+//            int optionUserI = input.nextInt();
+//            input.nextLine();
+            int optionUserI = Integer.parseInt(JOptionPane.showInputDialog(null, "Selection: ", "LibraryClient", JOptionPane.PLAIN_MESSAGE));
 
-            if(optionUserI==0){
+            if (optionUserI == 0) {
 
-            }else if(optionUserI==cont){
+            } else if (optionUserI == cont) {
                 finish = false;
-            }else{
-                String aux = services[optionUserI-1];
-                String paramList = aux.substring(aux.indexOf("(")+1,aux.indexOf(")"));
+            } else {
+                String aux = services[optionUserI - 1];
+                String paramList = aux.substring(aux.indexOf("(") + 1, aux.indexOf(")"));
                 String[] params = paramList.split(",");
                 String[] inputs = new String[params.length];
-                if(!paramList.equals("")) {
+                if (!paramList.equals("")) {
                     for (int i = 0; i < params.length; i++) {
-                        System.out.print("Required parameter \"" + params[i] + "\": ");
-                        inputs[i] = input.nextLine();
+//                        System.out.print("Required parameter \"" + params[i] + "\": ");
+//                        inputs[i] = input.nextLine();
+                        inputs[i] = JOptionPane.showInputDialog(null, "Required parameter \"" + params[i] + "\": ", "LibraryClient", JOptionPane.PLAIN_MESSAGE);
                     }
                 }
-                System.out.println(brokerStub.executeService(services[optionUserI-1], inputs));
+                System.out.println(brokerStub.executeService(services[optionUserI - 1], inputs));
             }
         }
 
