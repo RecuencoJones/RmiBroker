@@ -3,11 +3,13 @@ package es.unizar.as.rmi.broker.broker.methods;
 import es.unizar.as.rmi.broker.broker.Host;
 import es.unizar.as.rmi.broker.proxy.ServiceCaller;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -37,12 +39,16 @@ public class BrokerImpl implements BrokerIface {
         try {
             Registry registry = LocateRegistry.getRegistry(host.getIP(), host.getPort());
             ServiceCaller serverStub = (ServiceCaller) registry.lookup(server);
-            String response = serverStub.call(serviceName,args);
+            String response = serverStub.call(serviceName, args);
             return response;
+        }catch (NoSuchObjectException e){
+            log.severe("Broker exception");
+            e.printStackTrace();
+            return "Service not in table. Check broker log.";
         }catch (Exception e){
             log.severe("Broker exception");
             e.printStackTrace();
-            return null;
+            return "Broker error.";
         }
     }
 
@@ -75,7 +81,7 @@ public class BrokerImpl implements BrokerIface {
      */
     public boolean registerService(String serverName, String serviceName, String... args) throws RemoteException {
         try {
-            services.add(serviceName);
+            if(services.indexOf(serviceName)==-1) services.add(serviceName);
             servicesToServers.put(serviceName, serverName);
             log.info("Registered service: " + serviceName + " on server name: " + serverName);
             return true;

@@ -1,5 +1,7 @@
 package es.unizar.as.rmi.broker.broker;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import es.unizar.as.rmi.broker.broker.methods.BrokerIface;
 import es.unizar.as.rmi.broker.broker.methods.BrokerImpl;
 
@@ -13,15 +15,21 @@ import java.rmi.server.UnicastRemoteObject;
 public class Broker {
 
     /**
-     * Broker port and name
-     */
-    public static final int port = 2022;
-    public static final String brokerName = "broker";
-
-    /**
      * Broker initialization
      */
     public static void main(String[] args) {
+
+        /**
+         * Load configuration
+         */
+        Config conf = ConfigFactory.load("broker");
+
+        /**
+         * Broker port and name
+         */
+        final int port = conf.getInt("port");
+        final String brokerName = conf.getString("name");
+
         try{
             BrokerImpl broker = new BrokerImpl();
             BrokerIface stub = (BrokerIface) UnicastRemoteObject.exportObject(broker,0);

@@ -17,6 +17,7 @@ public class TimeImpl implements TimeIface {
      * @throws RemoteException
      */
     public String getDate() throws RemoteException {
+        //TODO esto es un bug inyectado a propósito para demostrar que dinámicamente puede cambiarse
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
         return formatter.format(new Date());
     }
