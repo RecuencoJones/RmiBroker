@@ -6,7 +6,7 @@ This Project contains 4 executable Java Applications:
 - LibraryClient: A client providing `addBook(title)` and `getBook()` methods
 - TimeClient: A client providing `getDate()` and `getHour()` methods
 
-    This client contains an intended bug [here]() to demonstrate that live-reloading clients changes broker methods on-the-fly
+    This client contains an intended bug [here](https://github.com/RecuencoJones/RmiBroker/blob/master/src/main/java/es/unizar/as/rmi/broker/clients/time/methods/TimeImpl.java#L21) to demonstrate that live-reloading clients changes broker methods on-the-fly
     so only this client will need to be recompiled.
 
 - ExternalClient: A consumer-only client
