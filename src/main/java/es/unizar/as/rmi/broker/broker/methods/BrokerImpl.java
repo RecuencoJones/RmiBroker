@@ -35,7 +35,7 @@ public class BrokerImpl implements BrokerIface {
         String server = servicesToServers.get(serviceName);
         Host host = serversToHosts.get(server);
         log.info("Called service: " + serviceName + " with args: " + Arrays.toString(args));
-
+        log.warning("Host IP: "+host.getIP()+", Host Port: "+host.getPort());
         try {
             Registry registry = LocateRegistry.getRegistry(host.getIP(), host.getPort());
             ServiceCaller serverStub = (ServiceCaller) registry.lookup(server);
