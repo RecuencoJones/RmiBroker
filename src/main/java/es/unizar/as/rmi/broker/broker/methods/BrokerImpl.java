@@ -21,7 +21,7 @@ public class BrokerImpl implements BrokerIface {
     Logger log = Logger.getLogger(this.getClass().getName());
     private final ConcurrentHashMap<String, Host> serversToHosts = new ConcurrentHashMap<String, Host>();
     private final ConcurrentHashMap<String, String> servicesToServers = new ConcurrentHashMap<String, String>();
-    private final ArrayList<String> services = new ArrayList<>();
+    private final ArrayList<String> services = new ArrayList<String>();
 
     /**
      * Method that indicates the broker to execute a service

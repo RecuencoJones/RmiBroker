@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class LibraryImpl implements LibraryIface {
 
-    ArrayList<String> list = new ArrayList<>();
+    ArrayList<String> list = new ArrayList<String>();
 
     /**
      * Method that adds a new book to the library

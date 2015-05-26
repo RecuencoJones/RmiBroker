@@ -166,13 +166,12 @@ public class TimeClient {
          */
         public String call(String method, String... args) throws RemoteException {
             log.info("Called method: " + method + " with args: " + Arrays.toString(args));
-            switch (method) {
-                case getDate:
-                    return timer.getDate();
-                case getHour:
-                    return timer.getHour();
-                default:
-                    return null;
+            if (method.equalsIgnoreCase(getDate)) {
+                return timer.getDate();
+            } else if (method.equalsIgnoreCase(getHour)) {
+                return timer.getHour();
+            } else {
+                return null;
             }
         }
     }

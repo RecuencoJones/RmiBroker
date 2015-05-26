@@ -53,7 +53,7 @@ public class LibraryClient {
             //Execution
             doInteraction(brokerStub);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -61,7 +61,7 @@ public class LibraryClient {
     /**
      * Client initialization
      */
-    private static void doConfiguration(){
+    private static void doConfiguration() {
         Config conf = ConfigFactory.load("library");
 
         brokerName = conf.getString("broker.name");
@@ -80,11 +80,12 @@ public class LibraryClient {
         LibraryProxy libraryProxy = new LibraryProxy();
         ServiceCaller proxyStub = (ServiceCaller) UnicastRemoteObject.exportObject(libraryProxy, 0);
         Registry proxyRegistry = LocateRegistry.createRegistry(myPort);
-        proxyRegistry.bind(proxyName,proxyStub);
+        proxyRegistry.bind(proxyName, proxyStub);
     }
 
     /**
      * Aux method to handle register services on broker
+     *
      * @return broker stubs
      * @throws RemoteException
      * @throws NotBoundException
@@ -93,13 +94,14 @@ public class LibraryClient {
         Registry brokerRegistry = LocateRegistry.getRegistry(hostIP, hostPort);
         BrokerIface brokerStub = (BrokerIface) brokerRegistry.lookup(brokerName);
         boolean response = brokerStub.registerServer(myIP + ":" + myPort, proxyName);
-        if(response) response = brokerStub.registerService(proxyName,addBook,new String[1]);
-        if(response) response = brokerStub.registerService(proxyName,getBooks,new String[0]);
+        if (response) response = brokerStub.registerService(proxyName, addBook, new String[1]);
+        if (response) response = brokerStub.registerService(proxyName, getBooks, new String[0]);
         return brokerStub;
     }
 
     /**
      * Aux method that does interaction with the user
+     *
      * @param brokerStub stub with broker methods
      * @throws RemoteException
      */
@@ -156,20 +158,20 @@ public class LibraryClient {
 
         /**
          * Method that handles service ad-hoc invocation on client
+         *
          * @param method requested method
-         * @param args requested method list of arguments
+         * @param args   requested method list of arguments
          * @return invoked method's response
          * @throws RemoteException
          */
         public String call(String method, String... args) throws RemoteException {
-            log.info("Called method: "+method+" with args: "+Arrays.toString(args));
-            switch (method){
-                case addBook:
-                    return library.addBook(args[0])+"";
-                case getBooks:
-                    return Arrays.toString(library.getBooks());
-                default:
-                    return null;
+            log.info("Called method: " + method + " with args: " + Arrays.toString(args));
+            if (method.equalsIgnoreCase(addBook)) {
+                return library.addBook(args[0]) + "";
+            } else if (method.equalsIgnoreCase(getBooks)) {
+                return Arrays.toString(library.getBooks());
+            } else {
+                return null;
             }
         }
     }
